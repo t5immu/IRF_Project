@@ -8,6 +8,7 @@ namespace IRF_T5IMMU.Entities
 {
     public class Adatok
     {
+        public string orszag { get; set; } //ország
         public int utszam { get; set; } //utazások száma, ezer út
         public int eltnap { get; set; }//eltöltött napok száma, ezer nap
         public int koltes { get; set; } //költés, millió Ft
