@@ -23,6 +23,7 @@ namespace IRF_T5IMMU
         string[] fejlecek = new string[6];
         BindingList<Adatok> _2019Q3 = new BindingList<Adatok>();
         BindingList<Adatok> _2020Q3 = new BindingList<Adatok>();
+        List<Adatok> szurt = new List<Adatok>();
 
         Excel.Application xlApp; // A Microsoft Excel alkalmazás
         Excel.Workbook xlWB; // A létrehozott munkafüzet
@@ -56,6 +57,7 @@ namespace IRF_T5IMMU
                          where i.koltes.Equals(int.Parse(textBox1.Text))
                          select i).ToList();
                 dataGridView1.DataSource = v;
+                szurt = v;
             }
             else
             {
@@ -65,6 +67,8 @@ namespace IRF_T5IMMU
                          where i.koltes.Equals(int.Parse(textBox1.Text))
                          select i).ToList();
                 dataGridView1.DataSource = v;
+                
+
             }
         }
 
@@ -78,6 +82,7 @@ namespace IRF_T5IMMU
                          where i.koltes.Equals(int.Parse(textBox1.Text))
                          select i).ToList();
                 dataGridView2.DataSource = v;
+                
             }
             else
             {
@@ -87,6 +92,7 @@ namespace IRF_T5IMMU
                          where i.koltes.Equals(int.Parse(textBox1.Text))
                          select i).ToList();
                 dataGridView2.DataSource = v;
+                
             }
         }
 
@@ -140,11 +146,11 @@ namespace IRF_T5IMMU
                 xlSheet.Cells[1, (i + 1)] = headers[i];
                 //MessageBox.Show(headers[i]);
             }
-
-            object[,] values = new object[_2019Q3.Count, headers.Length];
+            BindingList<Adatok> j = new BindingList<Adatok>(szurt);
+            object[,] values = new object[szurt.Count, headers.Length];
 
             int counter = 0;
-            foreach (Adatok a in _2019Q3)
+            foreach (Adatok a in szurt)
             {
                 values[counter, 0] = a.orszag;
                 values[counter, 1] = a.utszam;
