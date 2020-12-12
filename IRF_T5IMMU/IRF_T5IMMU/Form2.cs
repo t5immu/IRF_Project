@@ -18,7 +18,6 @@ namespace IRF_T5IMMU
 {
     public partial class Form2 : Form
     {
-        
         bool nagyobb = true;
         string[] fejlecek = new string[6];
         BindingList<Adatok> _2019Q3 = new BindingList<Adatok>();
@@ -51,9 +50,7 @@ namespace IRF_T5IMMU
 
         void lekerdezes()
         {
-
             List<Adatok> v = null;
-
             string st;
             st = listBox1.SelectedItem.ToString();
             if (st.Equals(fejlecek[0]))
@@ -130,11 +127,9 @@ namespace IRF_T5IMMU
             szurt2 = v2;
         }
 
-
-        void CreateTable()
+        void CreateTable2020()
         {
-            xlSheet.Name = "2019Q3";
-            //xlSheet2.Name = "2020Q3";
+            xlSheet.Name = "2020Q3";
             string[] headers = new string[] {
                 "Országok",
                 "Utazások száma, ezer út",
@@ -147,13 +142,11 @@ namespace IRF_T5IMMU
             for (int i = 0; i < headers.Length; i++)
             {
                 xlSheet.Cells[1, (i + 1)] = headers[i];
-                //MessageBox.Show(headers[i]);
             }
-            BindingList<Adatok> j = new BindingList<Adatok>(szurt);
-            object[,] values = new object[szurt.Count, headers.Length];
+            object[,] values = new object[szurt2.Count, headers.Length];
 
             int counter = 0;
-            foreach (Adatok a in szurt)
+            foreach (Adatok a in szurt2)
             {
                 values[counter, 0] = a.orszag;
                 values[counter, 1] = a.utszam;
@@ -184,13 +177,74 @@ namespace IRF_T5IMMU
             headerRange.RowHeight = 70;
             headerRange.Interior.Color = Color.Yellow;
             headerRange.BorderAround2(Excel.XlLineStyle.xlContinuous, Excel.XlBorderWeight.xlThin);
-            
-
+           
             Excel.Range orszagRange = xlSheet.get_Range(GetCell(2, 1), GetCell(2 + values.GetLength(0),1));
             orszagRange.HorizontalAlignment = Excel.XlHAlign.xlHAlignRight;
             orszagRange.BorderAround2(Excel.XlLineStyle.xlContinuous, Excel.XlBorderWeight.xlHairline);
 
             Excel.Range osszesenRange = xlSheet.get_Range(GetCell(2 + values.GetLength(0), 1), GetCell(2 + values.GetLength(0), headers.Length));
+            osszesenRange.Font.Bold = true;
+            osszesenRange.Font.Color = Color.Red;
+        }
+
+        void CreateTable2019()
+        {
+            xlSheet2.Name = "2019Q3";
+
+            string[] headers = new string[] {
+                "Országok",
+                "Utazások száma, ezer út",
+                "Eltöltött napok száma, ezer nap",
+                "Költés, millió Ft",
+                "Átlagos tartózkodási idő, nap",
+                "Egy fő egy napjára jutó költés, ezer Ft"
+            };
+
+            for (int i = 0; i < headers.Length; i++)
+            {
+                xlSheet2.Cells[1, (i + 1)] = headers[i];
+            }
+            BindingList<Adatok> j = new BindingList<Adatok>(szurt);
+            object[,] values = new object[szurt.Count, headers.Length];
+
+            int counter = 0;
+            foreach (Adatok a in szurt)
+            {
+                values[counter, 0] = a.orszag;
+                values[counter, 1] = a.utszam;
+                values[counter, 2] = a.eltnap;
+                values[counter, 3] = a.koltes;
+                values[counter, 4] = a.tartnap;
+                values[counter, 5] = a.napikoltes;
+                counter++;
+            }
+
+            xlSheet2.get_Range(
+             GetCell(2, 1),
+             GetCell(1 + values.GetLength(0), values.GetLength(1))).Value2 = values;
+
+            xlSheet2.Cells[2 + values.GetLength(0), 1] = "Összesen:";
+            xlSheet2.Cells[2 + values.GetLength(0), 2] = ("=SZUM(B2:B" + (1 + values.GetLength(0)) + ")");
+            xlSheet2.Cells[2 + values.GetLength(0), 3] = ("=SZUM(C2:C" + (1 + values.GetLength(0)) + ")");
+            xlSheet2.Cells[2 + values.GetLength(0), 4] = ("=SZUM(D2:D" + (1 + values.GetLength(0)) + ")");
+            xlSheet2.Cells[2 + values.GetLength(0), 5] = ("=ÁTLAG(E2:E" + (1 + values.GetLength(0)) + ")");
+            xlSheet2.Cells[2 + values.GetLength(0), 6] = "=D" + (2 + values.GetLength(0)) + "/C" + (2 + values.GetLength(0));
+
+            Excel.Range headerRange = xlSheet2.get_Range(GetCell(1, 1), GetCell(1, headers.Length));
+            headerRange.Font.Bold = true;
+            headerRange.WrapText = true;
+            headerRange.VerticalAlignment = Excel.XlVAlign.xlVAlignBottom;
+            headerRange.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
+            headerRange.EntireColumn.AutoFit();
+            headerRange.RowHeight = 70;
+            headerRange.Interior.Color = Color.Yellow;
+            headerRange.BorderAround2(Excel.XlLineStyle.xlContinuous, Excel.XlBorderWeight.xlThin);
+
+            Excel.Range orszagRange = xlSheet2.get_Range(GetCell(2, 1), GetCell(2 + values.GetLength(0), 1));
+            orszagRange.HorizontalAlignment = Excel.XlHAlign.xlHAlignRight;
+            orszagRange.BorderAround2(Excel.XlLineStyle.xlContinuous, Excel.XlBorderWeight.xlHairline);
+
+            Excel.Range osszesenRange = xlSheet2.get_Range(GetCell(2 + values.GetLength(0), 1), GetCell(2 + values.GetLength(0), headers.Length));
             osszesenRange.Font.Bold = true;
             osszesenRange.Font.Color = Color.Red;
         }
@@ -253,16 +307,11 @@ namespace IRF_T5IMMU
 
         }
 
-        private void Form2_Load(object sender, EventArgs e)
-        {
-
-        }
-
-
         private void button3_Click(object sender, EventArgs e)
         {
             CreateExcel();
         }
+
         private string GetCell(int x, int y)
         {
             string ExcelCoordinate = "";
@@ -279,33 +328,29 @@ namespace IRF_T5IMMU
 
             return ExcelCoordinate;
         }
+
         void CreateExcel()
         {
             try
             {
-                // Excel elindítása és az applikáció objektum betöltése
                 xlApp = new Excel.Application();
-
-                // Új munkafüzet
                 xlWB = xlApp.Workbooks.Add(Missing.Value);
 
-                // Új munkalap
                 xlSheet = xlWB.ActiveSheet;
+                CreateTable2020();
 
-                // Tábla létrehozása
-                CreateTable(); // Ennek megírása a következő feladatrészben következik
-                
+                xlWB.Worksheets.Add();
+                xlSheet2 = xlWB.Worksheets[1];
+                CreateTable2019();
 
-                // Control átadása a felhasználónak
                 xlApp.Visible = true;
                 xlApp.UserControl = true;
             }
-            catch (Exception ex) // Hibakezelés a beépített hibaüzenettel
+            catch (Exception ex)
             {
                 string errMsg = string.Format("Error: {0}\nLine: {1}", ex.Message, ex.Source);
                 MessageBox.Show(errMsg, "Error");
 
-                // Hiba esetén az Excel applikáció bezárása automatikusan
                 xlWB.Close(false, Type.Missing, Type.Missing);
                 xlApp.Quit();
                 xlWB = null;
