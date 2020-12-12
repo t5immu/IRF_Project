@@ -24,11 +24,13 @@ namespace IRF_T5IMMU
         BindingList<Adatok> _2019Q3 = new BindingList<Adatok>();
         BindingList<Adatok> _2020Q3 = new BindingList<Adatok>();
         List<Adatok> szurt = new List<Adatok>();
+        List<Adatok> szurt2 = new List<Adatok>();
 
-        Excel.Application xlApp; // A Microsoft Excel alkalmazás
-        Excel.Workbook xlWB; // A létrehozott munkafüzet
-        Excel.Worksheet xlSheet; // Munkalap a munkafüzeten belül
-        
+        Excel.Application xlApp;
+        Excel.Workbook xlWB;
+        Excel.Worksheet xlSheet;
+        Excel.Worksheet xlSheet2;
+
         public Form2()
         {
             InitializeComponent();
@@ -40,98 +42,99 @@ namespace IRF_T5IMMU
         }
         void fejlecek_betoltese()
         {
-            fejlecek[0]="utszam";
-            fejlecek[1] = "eltnap";
-            fejlecek[2] = "koltes";
-            fejlecek[3] = "tartnap";
-            fejlecek[4] = "napikoltes";
+            fejlecek[0]= "utazások";
+            fejlecek[1] = "eltöltött napok";
+            fejlecek[2] = "költes";
+            fejlecek[3] = "átl. tartózkodási idő";
+            fejlecek[4] = "napi átl. költés";
         }
 
         void lekerdezes()
         {
-            if (nagyobb)
-            {
-                string st;
-                st = listBox1.SelectedItem.ToString();
-                var v = (from i in _2019Q3
-                         where i.koltes.Equals(int.Parse(textBox1.Text))
-                         select i).ToList();
-                dataGridView1.DataSource = v;
-                szurt = v;
-            }
-            else
-            {
-                string st;
-                st = listBox1.SelectedItem.ToString();
-                var v = (from i in _2019Q3
-                         where i.koltes.Equals(int.Parse(textBox1.Text))
-                         select i).ToList();
-                dataGridView1.DataSource = v;
-                
 
+            List<Adatok> v = null;
+
+            string st;
+            st = listBox1.SelectedItem.ToString();
+            if (st.Equals(fejlecek[0]))
+            {
+                v = (from i in _2019Q3
+                     where (nagyobb && i.utszam > (int.Parse(textBox1.Text))) || (!nagyobb && i.utszam < (int.Parse(textBox1.Text)))
+                     select i).ToList();
             }
+            else if (st.Equals(fejlecek[1]))
+            {
+                v = (from i in _2019Q3
+                     where (nagyobb && i.eltnap > (int.Parse(textBox1.Text))) || (!nagyobb && i.eltnap < (int.Parse(textBox1.Text)))
+                     select i).ToList();
+            }
+            else if (st.Equals(fejlecek[2]))
+            {
+                v = (from i in _2019Q3
+                     where (nagyobb && i.koltes > (int.Parse(textBox1.Text))) || (!nagyobb && i.koltes < (int.Parse(textBox1.Text)))
+                     select i).ToList();
+            }
+            else if (st.Equals(fejlecek[3]))
+            {
+                v = (from i in _2019Q3
+                     where (nagyobb && i.tartnap > (int.Parse(textBox1.Text))) || (!nagyobb && i.tartnap < (int.Parse(textBox1.Text)))
+                     select i).ToList();
+            }
+            else if (st.Equals(fejlecek[4]))
+            {
+                v = (from i in _2019Q3
+                     where (nagyobb && i.napikoltes > (int.Parse(textBox1.Text))) || (!nagyobb && i.napikoltes < (int.Parse(textBox1.Text)))
+                     select i).ToList();
+            }
+            dataGridView1.DataSource = v;
+            szurt = v;
         }
 
         void lekerdezes2()
         {
-            if (nagyobb)
+            List<Adatok> v2 = null;
+
+            string st;
+            st = listBox1.SelectedItem.ToString();
+            if (st.Equals(fejlecek[0]))
             {
-                string st;
-                st = listBox1.SelectedItem.ToString();
-                var v = (from i in _2020Q3
-                         where i.koltes.Equals(int.Parse(textBox1.Text))
-                         select i).ToList();
-                dataGridView2.DataSource = v;
-                
+                v2 = (from i in _2020Q3
+                     where (nagyobb && i.utszam > (int.Parse(textBox1.Text))) || (!nagyobb && i.utszam < (int.Parse(textBox1.Text)))
+                     select i).ToList();
             }
-            else
+            else if (st.Equals(fejlecek[1]))
             {
-                string st;
-                st = listBox1.SelectedItem.ToString();
-                var v = (from i in _2020Q3
-                         where i.koltes.Equals(int.Parse(textBox1.Text))
-                         select i).ToList();
-                dataGridView2.DataSource = v;
-                
+                v2 = (from i in _2020Q3
+                     where (nagyobb && i.eltnap > (int.Parse(textBox1.Text))) || (!nagyobb && i.eltnap < (int.Parse(textBox1.Text)))
+                     select i).ToList();
             }
+            else if (st.Equals(fejlecek[2]))
+            {
+                v2 = (from i in _2020Q3
+                     where (nagyobb && i.koltes > (int.Parse(textBox1.Text))) || (!nagyobb && i.koltes < (int.Parse(textBox1.Text)))
+                     select i).ToList();
+            }
+            else if (st.Equals(fejlecek[3]))
+            {
+                v2 = (from i in _2020Q3
+                     where (nagyobb && i.tartnap > (int.Parse(textBox1.Text))) || (!nagyobb && i.tartnap < (int.Parse(textBox1.Text)))
+                     select i).ToList();
+            }
+            else if (st.Equals(fejlecek[4]))
+            {
+                v2 = (from i in _2020Q3
+                     where (nagyobb && i.napikoltes > (int.Parse(textBox1.Text))) || (!nagyobb && i.napikoltes < (int.Parse(textBox1.Text)))
+                     select i).ToList();
+            }
+            dataGridView2.DataSource = v2;
+            szurt2 = v2;
         }
 
-        void CreateExcel()
-        {
-            try
-            {
-                // Excel elindítása és az applikáció objektum betöltése
-                xlApp = new Excel.Application();
-
-                // Új munkafüzet
-                xlWB = xlApp.Workbooks.Add(Missing.Value);
-
-                // Új munkalap
-                xlSheet = xlWB.ActiveSheet;
-
-                // Tábla létrehozása
-                CreateTable(); // Ennek megírása a következő feladatrészben következik
-
-                // Control átadása a felhasználónak
-                xlApp.Visible = true;
-                xlApp.UserControl = true;
-            }
-            catch (Exception ex) // Hibakezelés a beépített hibaüzenettel
-            {
-                string errMsg = string.Format("Error: {0}\nLine: {1}", ex.Message, ex.Source);
-                MessageBox.Show(errMsg, "Error");
-
-                // Hiba esetén az Excel applikáció bezárása automatikusan
-                xlWB.Close(false, Type.Missing, Type.Missing);
-                xlApp.Quit();
-                xlWB = null;
-                xlApp = null;
-            }
-        }
 
         void CreateTable()
         {
             xlSheet.Name = "2019Q3";
+            //xlSheet2.Name = "2020Q3";
             string[] headers = new string[] {
                 "Országok",
                 "Utazások száma, ezer út",
@@ -178,7 +181,7 @@ namespace IRF_T5IMMU
             headerRange.VerticalAlignment = Excel.XlVAlign.xlVAlignBottom;
             headerRange.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
             headerRange.EntireColumn.AutoFit();
-            headerRange.RowHeight = 60;
+            headerRange.RowHeight = 70;
             headerRange.Interior.Color = Color.Yellow;
             headerRange.BorderAround2(Excel.XlLineStyle.xlContinuous, Excel.XlBorderWeight.xlThin);
             
@@ -195,13 +198,11 @@ namespace IRF_T5IMMU
         private void button1_Click(object sender, EventArgs e)
         {
             nagyobb = false;
-            lekerdezes();
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
             nagyobb = true;
-            lekerdezes();
         }
 
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
@@ -257,6 +258,11 @@ namespace IRF_T5IMMU
 
         }
 
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            CreateExcel();
+        }
         private string GetCell(int x, int y)
         {
             string ExcelCoordinate = "";
@@ -273,10 +279,39 @@ namespace IRF_T5IMMU
 
             return ExcelCoordinate;
         }
-
-        private void button3_Click(object sender, EventArgs e)
+        void CreateExcel()
         {
-            CreateExcel();
+            try
+            {
+                // Excel elindítása és az applikáció objektum betöltése
+                xlApp = new Excel.Application();
+
+                // Új munkafüzet
+                xlWB = xlApp.Workbooks.Add(Missing.Value);
+
+                // Új munkalap
+                xlSheet = xlWB.ActiveSheet;
+
+                // Tábla létrehozása
+                CreateTable(); // Ennek megírása a következő feladatrészben következik
+                
+
+                // Control átadása a felhasználónak
+                xlApp.Visible = true;
+                xlApp.UserControl = true;
+            }
+            catch (Exception ex) // Hibakezelés a beépített hibaüzenettel
+            {
+                string errMsg = string.Format("Error: {0}\nLine: {1}", ex.Message, ex.Source);
+                MessageBox.Show(errMsg, "Error");
+
+                // Hiba esetén az Excel applikáció bezárása automatikusan
+                xlWB.Close(false, Type.Missing, Type.Missing);
+                xlApp.Quit();
+                xlWB = null;
+                xlApp = null;
+            }
+
         }
     }
 }

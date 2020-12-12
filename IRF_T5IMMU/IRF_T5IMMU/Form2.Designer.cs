@@ -68,6 +68,7 @@
             this.textBox1.Size = new System.Drawing.Size(116, 22);
             this.textBox1.TabIndex = 2;
             this.textBox1.Tag = "";
+            this.textBox1.Text = "0";
             // 
             // listBox1
             // 
