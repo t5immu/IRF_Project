@@ -8,9 +8,9 @@ using System.Windows.Forms;
 
 namespace IRF_T5IMMU.Entities
 {
-    class Oszlop : Label
+    class Oszlop2 : Label
     {
-        public Oszlop()
+        public Oszlop2()
         {
             Width = 40;
             Paint += Oszlop_Paint;
@@ -23,8 +23,7 @@ namespace IRF_T5IMMU.Entities
 
         protected void DrawImage(Graphics g)
         {
-            g.FillRectangle(new SolidBrush(Color.Blue), 0, 0, Width, Height);
+            g.FillRectangle(new SolidBrush(Color.Red), 0, 0, Width, Height);
         }
-
     }
 }

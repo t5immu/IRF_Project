@@ -50,6 +50,9 @@
     <Compile Include="Entities\Oszlop.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Entities\Oszlop2.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
