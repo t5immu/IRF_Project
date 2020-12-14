@@ -22,6 +22,8 @@ namespace IRF_T5IMMU
         int m20;
         Label l19 = new Label();
         Label l20 = new Label();
+        Label evszam19 = new Label();
+        Label evszam20 = new Label();
         string[] fejlecek = new string[3];
         public Form3()
         {
@@ -29,8 +31,8 @@ namespace IRF_T5IMMU
             Adatbetoltes1();
             Adatbetoltes2();
             fejlecek_betoltese();
-
             orszagok();
+
             o19.Left = 280;
             o19.Top = this.Height-180;
             o19.Height = 100;
@@ -51,6 +53,16 @@ namespace IRF_T5IMMU
             Controls.Add(o20);
             Controls.Add(l20);
 
+            evszam19.Left = l19.Left;
+            evszam19.Width = l19.Width;
+            evszam19.Top = 10;
+            evszam19.Text = "2019:";
+            Controls.Add(evszam19);
+
+            evszam20.Left = l20.Left;
+            evszam20.Top = 10;
+            evszam20.Text = "2020:";
+            Controls.Add(evszam20);
         }
 
         void orszagok()
@@ -74,12 +86,12 @@ namespace IRF_T5IMMU
             listBox2.DataSource = fejlecek;
         }
 
+        int oszto;
+        string orszag;
+        string st;
         void valtas()
         {
-            int oszto;
-            string orszag;
             orszag = listBox1.SelectedItem.ToString();
-            string st;
             st = listBox2.SelectedItem.ToString();
             if (st.Equals(fejlecek[0]))
             {
