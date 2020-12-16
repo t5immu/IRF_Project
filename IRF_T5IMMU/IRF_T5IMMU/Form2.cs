@@ -204,7 +204,6 @@ namespace IRF_T5IMMU
             {
                 xlSheet2.Cells[1, (i + 1)] = headers[i];
             }
-            BindingList<Adatok> j = new BindingList<Adatok>(szurt);
             object[,] values = new object[szurt.Count, headers.Length];
 
             int counter = 0;
